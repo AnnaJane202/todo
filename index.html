@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои задачи</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function () {
+            var t = localStorage.getItem('todo.theme');
+            if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+
+<main class="app">
+    <header class="app__header">
+        <div class="app__title-row">
+            <h1>Мои задачи</h1>
+            <div class="app__actions">
+                <button class="icon-btn" id="notifyToggle" type="button"
+                        aria-label="Уведомления о просроченных задачах">🔕</button>
+                <button class="icon-btn" id="themeToggle" type="button"
+                        aria-label="Переключить тему">🌙</button>
+            </div>
+        </div>
+        <div class="app__meta">
+            <span class="app__date" id="date"></span>
+            <button class="overdue-chip" id="overdueChip" type="button" disabled
+                    title="Просроченных задач нет">
+                <span id="overdueCount">0</span><span id="overdueLabel">просрочено</span>
+            </button>
+        </div>
+    </header>
+
+    <form class="form" id="form" autocomplete="off">
+        <input
+                class="form__input"
+                id="input"
+                type="text"
+                placeholder="Что нужно сделать?"
+                maxlength="200"
+                autocomplete="off">
+        <input
+                class="form__date"
+                id="dateInput"
+                type="date"
+                aria-label="Дедлайн (необязательно)"
+                title="Дедлайн (необязательно)">
+        <button class="form__btn" type="submit" aria-label="Добавить задачу">+</button>
+    </form>
+
+    <div class="filters" id="filters">
+        <button class="filters__btn is-active" type="button" data-filter="all">Все</button>
+        <button class="filters__btn" type="button" data-filter="active">Активные</button>
+        <button class="filters__btn" type="button" data-filter="done">Выполненные</button>
+    </div>
+
+    <ul class="list is-draggable" id="list"></ul>
+
+    <div class="empty" id="empty" hidden>
+        <span class="empty__icon">📝</span>
+        <p>Пока нет задач. Добавьте первую!</p>
+    </div>
+
+    <footer class="app__footer">
+        <span id="counter">0 задач</span>
+        <button class="link" id="clearDone" type="button">Очистить выполненные</button>
+    </footer>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

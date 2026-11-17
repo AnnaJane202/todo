@@ -1,0 +1,490 @@
+/* ===== ПЕРЕМЕННЫЕ ТЕМ ===== */
+:root {
+    color-scheme: light;
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --surface: #ffffff;
+    --surface-2: #f7fafc;
+    --surface-3: #edf2f7;
+    --text: #1a202c;
+    --text-soft: #4a5568;
+    --text-muted: #718096;
+    --placeholder: #a0aec0;
+    --border: #e2e8f0;
+    --border-soft: #cbd5e0;
+    --accent: #667eea;
+    --accent-hover: #5a67d8;
+    --accent-contrast: #ffffff;
+    --success: #48bb78;
+    --success-contrast: #ffffff;
+    --success-soft: rgba(72, 187, 120, 0.12);
+    --danger: #e53e3e;
+    --danger-contrast: #ffffff;
+    --warn: #c05621;
+    --warn-contrast: #ffffff;
+    --danger-soft: rgba(229, 62, 62, 0.12);
+    --warn-soft: rgba(221, 107, 32, 0.14);
+    --shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+    --bg-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    --surface: #1e293b;
+    --surface-2: #243447;
+    --surface-3: #2d3f57;
+    --text: #f1f5f9;
+    --text-soft: #cbd5e1;
+    --text-muted: #94a3b8;
+    --placeholder: #64748b;
+    --border: #334155;
+    --border-soft: #475569;
+    --accent: #818cf8;
+    --accent-hover: #a5b4fc;
+    --accent-contrast: #0f172a;
+    --success: #4ade80;
+    --success-contrast: #0f172a;
+    --success-soft: rgba(74, 222, 128, 0.15);
+    --danger: #f87171;
+    --danger-contrast: #1a202c;
+    --warn: #fb923c;
+    --warn-contrast: #1a202c;
+    --danger-soft: rgba(248, 113, 113, 0.15);
+    --warn-soft: rgba(251, 146, 60, 0.15);
+    --shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== БАЗА ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    color: var(--text);
+    transition: background 0.3s;
+}
+
+.app {
+    background: var(--surface);
+    width: 100%;
+    max-width: 520px;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 28px 28px 20px;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.3s;
+}
+
+/* ===== ЗАГОЛОВОК ===== */
+.app__header { margin-bottom: 18px; }
+
+.app__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.app__title-row h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.app__actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* Строка «дата + чип просроченных» */
+.app__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+    font-size: 14px;
+    min-height: 22px;
+}
+
+.app__date { color: var(--text-muted); }
+
+/* ===== ЧИП ПРОСРОЧЕННЫХ ===== */
+.overdue-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: var(--success-soft);
+    color: var(--success);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
+}
+
+.overdue-chip:hover:not(:disabled) { border-color: var(--success); }
+
+/* Есть просроченные — красный вид */
+.overdue-chip.has-overdue {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+.overdue-chip.has-overdue:hover:not(:disabled) { border-color: var(--danger); }
+
+/* Активный фильтр «просроченные» */
+.overdue-chip.is-active {
+    background: var(--danger);
+    color: var(--danger-contrast);
+    border-color: var(--danger);
+}
+
+/* Ноль просроченных — «всё хорошо», кликать некуда */
+.overdue-chip:disabled {
+    cursor: default;
+    opacity: 0.85;
+}
+
+/* Кнопки-иконки (тема, уведомления) */
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface-2);
+    cursor: pointer;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.icon-btn:hover { background: var(--surface-3); border-color: var(--border-soft); }
+.icon-btn:active { transform: scale(0.94); }
+.icon-btn.is-active { background: var(--accent); border-color: var(--accent); }
+
+/* ===== ФОРМА ===== */
+.form { display: flex; gap: 10px; margin-bottom: 16px; }
+
+.form__input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    background: var(--surface-2);
+    color: var(--text);
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.form__input:focus { border-color: var(--accent); background: var(--surface); }
+.form__input::placeholder { color: var(--placeholder); }
+
+.form__date {
+    width: 150px;
+    height: 48px;
+    padding: 12px 10px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--surface-2);
+    color: var(--text-soft);
+    outline: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.form__date:focus { border-color: var(--accent); background: var(--surface); }
+
+.form__btn {
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-size: 26px;
+    font-weight: 300;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.form__btn:hover { background: var(--accent-hover); }
+.form__btn:active { transform: scale(0.95); }
+
+/* ===== ФИЛЬТРЫ ===== */
+.filters { display: flex; gap: 8px; margin-bottom: 16px; }
+
+.filters__btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filters__btn:hover { border-color: var(--border-soft); background: var(--surface-2); }
+.filters__btn.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-contrast);
+}
+
+/* ===== СПИСОК ===== */
+.list {
+    list-style: none;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 4px;
+    margin-bottom: 12px;
+}
+
+.list::-webkit-scrollbar { width: 6px; }
+.list::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 3px; }
+
+.task {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: background 0.2s, box-shadow 0.2s, opacity 0.2s;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.task:hover { background: var(--surface-3); }
+
+.task.dragging {
+    opacity: 0.9;
+    background: var(--surface-3);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+}
+
+.task__handle {
+    flex-shrink: 0;
+    width: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--border-soft);
+    font-size: 18px;
+    line-height: 1;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    opacity: 0.7;
+    transition: color 0.2s, opacity 0.2s;
+}
+
+.task__handle:hover { color: var(--text-muted); opacity: 1; }
+.task.dragging .task__handle { cursor: grabbing; }
+.list:not(.is-draggable) .task__handle { display: none; }
+
+.task__checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border-soft);
+    border-radius: 50%;
+    background: var(--surface);
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: transparent;
+    font-size: 13px;
+}
+
+.task__checkbox.checked {
+    background: var(--success);
+    border-color: var(--success);
+    color: var(--success-contrast);
+}
+
+.task__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: flex-start;
+}
+
+.task__text {
+    font-size: 15px;
+    word-break: break-word;
+    outline: none;
+    padding: 2px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s;
+    color: var(--text);
+    max-width: 100%;
+}
+
+.task__text:focus { border-bottom-color: var(--accent); }
+.task.done .task__text { text-decoration: line-through; color: var(--text-muted); }
+
+.task__deadline {
+    align-self: flex-start;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 1px 7px;
+    border-radius: 6px;
+    background: var(--surface-3);
+    color: var(--text-muted);
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.task__deadline:hover { border-color: var(--border-soft); }
+.task__deadline.deadline--overdue { color: var(--danger); background: var(--danger-soft); }
+.task__deadline.deadline--today,
+.task__deadline.deadline--soon { color: var(--warn); background: var(--warn-soft); }
+.task.done .task__deadline { opacity: 0.6; }
+
+.task__add-deadline {
+    align-self: flex-start;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 1px 7px;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px dashed var(--border-soft);
+    cursor: pointer;
+    font-family: inherit;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+
+.task:hover .task__add-deadline { opacity: 1; }
+.task__add-deadline:hover { background: var(--surface-3); color: var(--text-soft); }
+
+.task__deadline-input {
+    font-size: 12px;
+    padding: 2px 6px;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    max-width: 150px;
+}
+
+.task__delete {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0;
+    flex-shrink: 0;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.task:hover .task__delete { opacity: 1; }
+.task__delete:hover { color: var(--danger); }
+
+@media (hover: none) {
+    .task__delete { opacity: 1; }
+    .task__add-deadline { opacity: 1; }
+}
+
+/* ===== ПУСТОЕ СОСТОЯНИЕ ===== */
+.empty { text-align: center; padding: 32px 0; color: var(--text-muted); }
+.empty__icon { font-size: 40px; display: block; margin-bottom: 8px; }
+.empty p { font-size: 15px; }
+
+/* ===== ФУТЕР ===== */
+.app__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 2px solid var(--surface-3);
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.link {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.link:hover { color: var(--accent-hover); text-decoration: underline; }
+.link:disabled { color: var(--border-soft); cursor: default; text-decoration: none; }
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 560px) {
+    body { padding: 16px 12px 32px; }
+    .app { padding: 20px 18px 16px; border-radius: 18px; }
+
+    .app__title-row h1 { font-size: 22px; }
+    .icon-btn { width: 36px; height: 36px; font-size: 15px; }
+
+    .app__meta { font-size: 13px; }
+
+    .form { flex-wrap: wrap; gap: 8px; }
+    .form__input { flex: 1 1 100%; order: 1; padding: 11px 14px; }
+    .form__date { flex: 1; width: auto; order: 2; height: 44px; }
+    .form__btn { order: 3; width: 44px; height: 44px; font-size: 24px; }
+
+    .filters__btn { padding: 8px 6px; font-size: 13px; }
+    .task { padding: 10px 10px; gap: 8px; }
+    .task__text { font-size: 14px; }
+    .task__handle { width: 14px; font-size: 16px; }
+    .app__footer { flex-wrap: wrap; font-size: 13px; }
+}
+
+@media (max-width: 360px) {
+    .filters { gap: 6px; }
+    .filters__btn { padding: 7px 4px; font-size: 12px; }
+    .icon-btn { width: 32px; height: 32px; font-size: 14px; }
+    .overdue-chip { font-size: 11px; padding: 1px 8px; }
+}
